@@ -1,26 +1,42 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
+# Use a package of configuration called an orb.
+orbs:
+  ## Choose either one of the orbs below 
+  ## aws-cli: circleci/aws-cli@2.0.3
+  ## welcome: circleci/welcome-orb@0.4.1
+  aws-cli: circleci/aws-cli@2.0.3
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+# Orchestrate or schedule a set of jobs
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+  # Exercise: Creating a Simple Workflow
+  # Exercise: Environment Variables
+  # Exercise: Reusable Job Code 
+  print_greetings:
     docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+      - image: circleci/node:13.8.0
+    steps:
+      - print_pipeline_id:
+          id: << pipeline.id >>
+      - run: echo HELLO
+      - run: echo WORLD
+      - run: echo $_env_name
+
+  # Exercise: Infrastructure Creation
+  create_infrastructure: 
+    docker:
+      - image: amazon/aws-cli
     steps:
       - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
-
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+          name: Create Cloudformation Stack
+          command: |
+            aws cloudformation deploy \
+              --template-file "LearnAnsible/Exercises/4.InfrastructureCreationJobs/template.yml" \
+              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
+              --region us-east-1
 workflows:
-  say-hello-workflow:
+  # Name the workflow "welcome"
+  my_workflow:
+    # Run the welcome/run job in its own container
     jobs:
-      - say-hello
+      - create_infrastructure
