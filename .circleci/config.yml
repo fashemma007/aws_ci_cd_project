@@ -54,7 +54,7 @@ jobs:
       - run:
           name: Run Playbook and Configure server
           command: |
-            ansible-playbook -i inventory main-remote.yml
+            ansible-playbook -i inventory main-remote.yml --key-file ~/.ssh/id_rsa_a1ec5ebb0efc454ba0c93ef9245f9271
 
 workflows:
   # Name the workflow "welcome"
