@@ -99,7 +99,7 @@ jobs:
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters Name=tag:Name,Values=ansible-instance \
             --output text)
-            export API_URL="http://${BACKEND_IP}:3030"
+            export API_URL="http://${BACKEND_IP}:3000"
             echo "${API_URL}"
             if curl -s "${API_URL}"
             then
@@ -112,10 +112,10 @@ workflows:
   my_workflow:
     # Run the welcome/run job in its own container
     jobs:
-      - create_infrastructure
-      - adding_ips:
-          requires: [create_infrastructure]
-      - configure_infrastructure: 
-          requires: [adding_ips]
-      - smoke_test: 
-          requires: [configure_infrastructure]
+      # - create_infrastructure
+      # - adding_ips:
+      #     requires: [create_infrastructure]
+      # - configure_infrastructure: 
+      #     requires: [adding_ips]
+      - smoke_test
+          # requires: [configure_infrastructure]
