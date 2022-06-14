@@ -51,9 +51,16 @@ jobs:
             ## Install Ansible
               apk add --update ansible
       - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+            aws ec2 describe-instances \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --filters "Name=tag:project,Values=ansible-instance" \
+              --output text >> inventory.txt
+      - run:
           name: Run Playbook and Configure server
           command: |
-            ansible-playbook -i inventory main-remote.yml
+            ansible-playbook -i inventory main-remote.yml -vvvv
 
 workflows:
   # Name the workflow "welcome"
