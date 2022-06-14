@@ -32,10 +32,10 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file template.yml \
-              --stack-name ansible-cloudformation-stack
+              --stack-name ansible-cloudformation-stack --region us-east-1
 ## Note: The below was commented out to keep a unique and constant stack name
 # --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
-              --region us-east-1
+              # --region us-east-1
   
 # Exercise: Config and Deployment
 configure_infrastructure: 
