@@ -46,7 +46,7 @@ jobs:
       - run:
           name: Add instance ip to ansible inventory
           command: |
-            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters  "Name=tag:project,Values=ansible-instance" --output text >> inventory.txt
+            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters  "Name=tag:Name,Values=ansible-instance" --output text >> inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
