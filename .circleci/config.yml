@@ -38,23 +38,23 @@ jobs:
               # --region us-east-1
   
 # Exercise: Config and Deployment
-configure_infrastructure: 
-  docker:
-    - image: 
-  steps:
-    - checkout
-    - add_ssh_keys:
-            # You can get this ID in the section where you registered the SSH Key
-            fingerprints: ["a1:ec:5e:bb:0e:fc:45:4b:a0:c9:3e:f9:24:5f:92:71"] 
-    - run:
-        name: Install Ansible
-        command: |
-          ## Install Ansible
-            apk add --update ansible
-    - run:
-        name: Run Playbook and Configure server
-        command: |
-          ansible-playbook -i inventory main4.yml
+  configure_infrastructure: 
+    docker:
+      - image: 
+    steps:
+      - checkout
+      - add_ssh_keys:
+              # You can get this ID in the section where you registered the SSH Key
+              fingerprints: ["a1:ec:5e:bb:0e:fc:45:4b:a0:c9:3e:f9:24:5f:92:71"] 
+      - run:
+          name: Install Ansible
+          command: |
+            ## Install Ansible
+              apk add --update ansible
+      - run:
+          name: Run Playbook and Configure server
+          command: |
+            ansible-playbook -i inventory main4.yml
 
 workflows:
   # Name the workflow "welcome"
