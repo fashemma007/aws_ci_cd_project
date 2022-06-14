@@ -48,9 +48,9 @@ jobs:
           command: |
             aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters  "Name=tag:project,Values=ansible-instance" --output text >> .circleci/inventory.txt
       - persist_to_workspace:
-          root: .
+          root: ~/
           paths:
-            - .circleci/*
+            - *
             
 # Exercise: Config and Deployment
   configure_infrastructure: 
@@ -59,13 +59,14 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-              fingerprints: ["a1:ec:5e:bb:0e:fc:45:4b:a0:c9:3e:f9:24:5f:92:71"]
+              # fingerprints: ["a1:ec:5e:bb:0e:fc:45:4b:a0:c9:3e:f9:24:5f:92:71"]
+              fingerprints: ["17:03:c5:7f:62:60:69:97:e0:50:ba:8e:69:e7:20:b5"]
       - attach_workspace:
-          at: .
+          at: ~/
       
       - run: 
           name: View content of inventory.txt
-          command: cat .circleci/inventory.txt 
+          command: cat inventory.txt 
       
       - run:
           name: Install Ansible
@@ -75,7 +76,7 @@ jobs:
       - run:
           name: Run Playbook and Configure server
           command: |
-            ansible-playbook -i .circleci/inventory.txt main-remote.yml -vvvv
+            ansible-playbook -i inventory.txt main-remote.yml --key-file ~/.ssh/id_rsa_1703c57f62606997e050ba8e69e720b5 -vvvv
 
 workflows:
   # Name the workflow "welcome"
