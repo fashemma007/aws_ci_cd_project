@@ -36,7 +36,22 @@ jobs:
 ## Note: The below was commented out to keep a unique and constant stack name
 # --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
               # --region us-east-1
-  
+
+  adding_ips:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run: yum install -y tar gzip
+      - run:
+          name: Add instance ip to ansible inventory
+          command: |
+            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters  "Name=tag:project,Values=ansible-instance" --output text >> .circleci/inventory.txt
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .circleci/*
+            
 # Exercise: Config and Deployment
   configure_infrastructure: 
     docker:
@@ -44,20 +59,23 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-              fingerprints: ["a1:ec:5e:bb:0e:fc:45:4b:a0:c9:3e:f9:24:5f:92:71"] 
+              fingerprints: ["a1:ec:5e:bb:0e:fc:45:4b:a0:c9:3e:f9:24:5f:92:71"]
+      - attach_workspace:
+          at: .
+      
+      - run: 
+          name: View content of inventory.txt
+          command: cat .circleci/inventory.txt 
+      
       - run:
           name: Install Ansible
           command: |
             ## Install Ansible
               apk add --update ansible
       - run:
-          name: Add instance ip to ansible inventory
-          command: |
-            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters  "Name=tag:project,Values=ansible-instance" --output text >> inventory.txt
-      - run:
           name: Run Playbook and Configure server
           command: |
-            ansible-playbook -i inventory main-remote.yml -vvvv
+            ansible-playbook -i .circleci/inventory.txt main-remote.yml -vvvv
 
 workflows:
   # Name the workflow "welcome"
@@ -65,5 +83,7 @@ workflows:
     # Run the welcome/run job in its own container
     jobs:
       - create_infrastructure
-      - configure_infrastructure: 
+      - adding_ips:
           requires: [create_infrastructure]
+      - configure_infrastructure: 
+          requires: [adding_ips]
