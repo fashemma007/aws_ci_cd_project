@@ -60,8 +60,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-              # fingerprints: ["a1:ec:5e:bb:0e:fc:45:4b:a0:c9:3e:f9:24:5f:92:71"]
-              fingerprints: ["17:03:c5:7f:62:60:69:97:e0:50:ba:8e:69:e7:20:b5"]
+              fingerprints: ["17:03:c5:7f:62:60:69:97:e0:50:ba:8e:69:e7:20:b5"] ##used ed25519 key-pair type named "test"
       - attach_workspace:
           at: ~/
       
