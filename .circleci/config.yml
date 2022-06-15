@@ -118,7 +118,7 @@ jobs:
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --filters Name=tag:Name,Values= << pipeline.parameters.instance-name >> \
+            --filters Name=tag:Name,Values=<< pipeline.parameters.instance-name >> \
             --output text)
             export API_URL="http://${BACKEND_IP}:3000"
             echo "${API_URL}"
