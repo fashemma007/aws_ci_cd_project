@@ -11,7 +11,7 @@ orbs:
 parameters:
   stack-name:
     type: string
-    default: "ansible-stack"
+    default: ansble-stk-${CIRCLE_WORKFLOW_ID:0:5}
   instance-name:
     type: string
     default: "ansible-instance"
