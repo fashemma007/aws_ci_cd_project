@@ -17,7 +17,7 @@ parameters:
 
 # Rollback configuration
 commands:
-  destroy_environments:
+  destroy_environment:
     steps:
       - run:
           name:  Destroy Environments
@@ -67,7 +67,7 @@ jobs:
       - run:
           name: Add instance ip to ansible inventory
           command: |
-            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters  "Name=tag:Name,Values=ansible-instance" --output text >> inventory.txt
+            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters  "Name=tag:Name,Values= << pipeline.parameters.instance-name >>" --output text >> inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
@@ -118,16 +118,17 @@ jobs:
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --filters Name=tag:Name,Values=ansible-instance \
+            --filters Name=tag:Name,Values= << pipeline.parameters.instance-name >> \
             --output text)
             export API_URL="http://${BACKEND_IP}:3000"
             echo "${API_URL}"
             if curl -s "${API_URL}"
             then
-                return 0
+                return 1
             else
                 return 1
             fi
+      - destroy_environment
 workflows:
   # Name the workflow "welcome"
   my_workflow:
