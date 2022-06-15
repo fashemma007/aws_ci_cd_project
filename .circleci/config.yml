@@ -6,6 +6,26 @@ orbs:
   ## welcome: circleci/welcome-orb@0.4.1
   aws-cli: circleci/aws-cli@2.0.3
 
+#testing out parameters
+parameters:
+  stack-name:
+    type: string
+    default: "ansible-stack"
+  instance-name:
+    type: string
+    default: "ansible-instance"
+
+# Rollback configuration
+commands:
+  destroy_environments:
+    steps:
+      - run:
+          name:  Destroy Environments
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack --stack-name << pipeline.parameters.stack-name >>
+  
+
 # Orchestrate or schedule a set of jobs
 jobs:
   # Exercise: Creating a Simple Workflow
@@ -32,10 +52,11 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file template.yml \
-              --stack-name ansible-cloudformation-stack --region us-east-1
+              --stack-name << pipeline.parameters.stack-name >> --region us-east-1
 ## Note: The below was commented out to keep a unique and constant stack name
 # --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
               # --region us-east-1
+              # ansible-cloudformation-stack
 
   adding_ips:
     docker:
@@ -112,10 +133,10 @@ workflows:
   my_workflow:
     # Run the welcome/run job in its own container
     jobs:
-      # - create_infrastructure
-      # - adding_ips:
-      #     requires: [create_infrastructure]
-      # - configure_infrastructure: 
-      #     requires: [adding_ips]
-      - smoke_test
-          # requires: [configure_infrastructure]
+      - create_infrastructure
+      - adding_ips:
+          requires: [create_infrastructure]
+      - configure_infrastructure: 
+          requires: [adding_ips]
+      - smoke_test:
+          requires: [configure_infrastructure]
