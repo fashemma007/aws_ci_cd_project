@@ -223,12 +223,17 @@ jobs:
     docker:
       # Docker image here that supports Ansible
       - image: python:3.10-alpine3.16
+    parameters:
+      # parameters added
+      ssh_keys:
+        type: string
     steps:
       # Checkout code from git
       - checkout
       # Add ssh keys with fingerprint
       - add_ssh_keys:
-          fingerprints: << parameters.ssh_keys >>
+          fingerprints:
+            - << parameters.ssh_keys >>
       # attach workspace
       - attach_workspace:
           at: ~/
@@ -338,12 +343,17 @@ jobs:
     docker:
       # Docker image here that supports Ansible
       - image: python:3.10-alpine3.16
+    parameters:
+      # parameters added
+      ssh_keys:
+        type: string
     steps:
       # Checkout code from git
       - checkout
       # Add ssh keys with fingerprint
       - add_ssh_keys:
-          fingerprints: << parameters.ssh_keys >>
+          fingerprints:
+            - << parameters.ssh_keys >>
       # attach workspace
       - attach_workspace:
           at: ~/
