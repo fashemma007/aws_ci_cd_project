@@ -225,7 +225,6 @@ jobs:
       # attach workspace
       - attach_workspace:
           at: .
-
       - run:
           name: View instance IPs in inventory.txt
           command: cat .circleci/ansible/inventory.txt
@@ -240,8 +239,8 @@ jobs:
           name: Configure server
           command: |
             cd .circleci/ansible
-            ansible-playbook -i inventory.txt configure-server.yml 
-            #--key-file ~/.ssh/id_rsa_1703c57f62606997e050ba8e69e720b5
+            ansible-playbook -i inventory.txt configure-server.yml \
+            --key-file ~/.ssh/id_rsa_1703c57f62606997e050ba8e69e720b5
 
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
@@ -368,8 +367,8 @@ jobs:
             cd .circleci/ansible
             echo "Instance IPs in inventory.txt: $(cat inventory.txt)"
             # Deploying the backend stack using cloudformation
-            ansible-playbook -i inventory.txt deploy-backend.yml -vv
-            # --key-file ~/.ssh/id_rsa_1703c57f62606997e050ba8e69e720b5 -vv
+            ansible-playbook -i inventory.txt deploy-backend.yml \
+            --key-file ~/.ssh/id_rsa_1703c57f62606997e050ba8e69e720b5 -vv
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
