@@ -206,9 +206,9 @@ jobs:
             --output text) >> ~/project/.circleci/ansible/inventory.txt
             cat ~/project/.circleci/ansible/inventory.txt
       - persist_to_workspace:
-          root: ~/
+          root: .
           paths:
-            - project/.circleci/ansible/*
+            - .circleci/ansible/*
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
@@ -225,7 +225,7 @@ jobs:
           fingerprints: ["17:03:c5:7f:62:60:69:97:e0:50:ba:8e:69:e7:20:b5"]
       # attach workspace
       - attach_workspace:
-          at: ~/
+          at: .
 
       - run:
           name: View instance IPs in inventory.txt
@@ -241,13 +241,8 @@ jobs:
           name: Configure server
           command: |
             cd .circleci/ansible
-            ansible-playbook -i inventory.txt configure-server.yml \
-            --key-file ~/.ssh/id_rsa_1703c57f62606997e050ba8e69e720b5
-      #Persist backend files in workspace
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - project/backend
+            ansible-playbook -i inventory.txt configure-server.yml --key-file ~/.ssh/id_rsa_1703c57f62606997e050ba8e69e720b5
+
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
