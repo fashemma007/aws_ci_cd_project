@@ -354,10 +354,10 @@ jobs:
           name: Install dependencies
           command: |
             apk add --update --no-cache ansible curl rsync openssh nodejs npm tree aws-cli
-          #to confirm ansible and awscli
+            #to confirm ansible and awscli
             ansible --version
             # pip install awscli
-            aws --version 
+            aws --version
       - run:
           name: Deploy backend
           command: |
@@ -365,16 +365,14 @@ jobs:
             npm i
             npm run build
             cd ..
-            
-          #compress the backend folder as "artifact.tar.gz"
+            #compress the backend folder as "artifact.tar.gz"
             tar -C backend -czvf artifact.tar.gz . 
             tree -afC /root/project/.circleci -I *node_modules*
             mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
             mv artifact.tar.gz .circleci/ansible/roles/deploy/files/artifact.tar.gz
             cd .circleci/ansible
             echo "Instance IPs in inventory.txt: $(cat inventory.txt)"
-
-          # Deploying the backend stack using cloudformation
+            # Deploying the backend stack using cloudformation
             ansible-playbook -i inventory.txt deploy-backend.yml -vv
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
