@@ -223,10 +223,6 @@ jobs:
     docker:
       # Docker image here that supports Ansible
       - image: python:3.10-alpine3.16
-    parameters:
-      # parameters added
-      ssh_keys:
-        type: string
     steps:
       # Checkout code from git
       - checkout
@@ -343,10 +339,6 @@ jobs:
     docker:
       # Docker image here that supports Ansible
       - image: python:3.10-alpine3.16
-    parameters:
-      # parameters added
-      ssh_keys:
-        type: string
     steps:
       # Checkout code from git
       - checkout
