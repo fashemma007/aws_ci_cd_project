@@ -11,7 +11,7 @@ parameters:
 
   ssh_keys:
     type: string
-    default: "["a1:ec:5e:bb:0e:fc:45:4b:a0:c9:3e:f9:24:5f:92:71"]"
+    default: "a1:ec:5e:bb:0e:fc:45:4b:a0:c9:3e:f9:24:5f:92:71"
 
 commands:
   destroy-environment:
