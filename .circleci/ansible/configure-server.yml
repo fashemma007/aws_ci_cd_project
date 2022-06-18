@@ -1,5 +1,4 @@
 ---
-
 - name: "Configure UdaPeople Infrastructure."
   hosts: web
   user: ubuntu
@@ -13,10 +12,10 @@
     - ansible_stdout_callback: yaml
 
   pre_tasks:
-    - name: 'wait 600 seconds for target connection to become reachable/usable.'
+    - name: "wait 600 seconds for target connection to become reachable/usable."
       wait_for_connection:
       # Your code here
-    - name: 'Install python for Ansible.'
+    - name: "Install python for Ansible."
       apt:
         name: python3
         state: latest
@@ -40,6 +39,5 @@
 
   roles:
     - configure-server
-    - node
     - configure-prometheus-node-exporter
     # Your code here
