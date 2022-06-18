@@ -25,7 +25,8 @@ commands:
             echo "Destroying << parameters.workflow_id >>. Sit tight !!!"
 
             #deleting files stored in S3 bucket
-            aws s3 rm s3://udapeoplefrontend-<< parameters.workflow_id >> --recursive
+            aws s3 rm s3://udapeople-<< parameters.workflow_id >> --recursive
+            # aws s3 rm s3://udapeoplefrontend-<< parameters.workflow_id >> --recursive
 
             # Deleting backend stack and associated resources
             aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.workflow_id >> 
@@ -240,7 +241,8 @@ jobs:
           name: Configure server
           command: |
             cd .circleci/ansible
-            ansible-playbook -i inventory.txt configure-server.yml
+            ansible-playbook -i inventory.txt configure-server.yml\
+            --key-file ~/.ssh/id_rsa_1703c57f62606997e050ba8e69e720b5
       #Persist backend files in workspace
       - persist_to_workspace:
           root: ~/
@@ -368,7 +370,8 @@ jobs:
             cd .circleci/ansible
             echo "Instance IPs in inventory.txt: $(cat inventory.txt)"
             # Deploying the backend stack using cloudformation
-            ansible-playbook -i inventory.txt deploy-backend.yml -vv
+            ansible-playbook -i inventory.txt deploy-backend.yml\
+            --key-file ~/.ssh/id_rsa_1703c57f62606997e050ba8e69e720b5 -vv
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
