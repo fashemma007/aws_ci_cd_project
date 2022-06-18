@@ -9,10 +9,6 @@ parameters:
     type: string
     default: "${CIRCLE_WORKFLOW_ID}"
 
-  ssh_keys:
-    type: string
-    default: "a1:ec:5e:bb:0e:fc:45:4b:a0:c9:3e:f9:24:5f:92:71"
-
 commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
@@ -225,8 +221,7 @@ jobs:
       - checkout
       # Add ssh keys with fingerprint
       - add_ssh_keys:
-          fingerprints:
-            - << pipeline.parameters.ssh_keys >>
+          fingerprints: ["a1:ec:5e:bb:0e:fc:45:4b:a0:c9:3e:f9:24:5f:92:71"]
       # attach workspace
       - attach_workspace:
           at: ~/
@@ -343,8 +338,7 @@ jobs:
       - checkout
       # Add ssh keys with fingerprint
       - add_ssh_keys:
-          fingerprints:
-            - << pipeline.parameters.ssh_keys >>
+          fingerprints: ["a1:ec:5e:bb:0e:fc:45:4b:a0:c9:3e:f9:24:5f:92:71"]
       # attach workspace
       - attach_workspace:
           at: ~/
