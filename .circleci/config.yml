@@ -233,7 +233,7 @@ jobs:
       # Add ssh keys with fingerprint
       - add_ssh_keys:
           fingerprints:
-            - << parameters.ssh_keys >>
+            - << pipeline.parameters.ssh_keys >>
       # attach workspace
       - attach_workspace:
           at: ~/
@@ -353,7 +353,7 @@ jobs:
       # Add ssh keys with fingerprint
       - add_ssh_keys:
           fingerprints:
-            - << parameters.ssh_keys >>
+            - << pipeline.parameters.ssh_keys >>
       # attach workspace
       - attach_workspace:
           at: ~/
