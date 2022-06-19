@@ -63,4 +63,5 @@ Before you submit your project, please check your work against the project rubri
 
 [License](LICENSE.md)
 
+[CircleCI]
 [![CircleCI](https://circleci.com/gh/fashemma007/aws_ci_cd_project.svg?style=svg&circle-token=a2fc98a6dd7b77c230eb6ff6149d5683561092fc)](https://app.circleci.com/pipelines/github/fashemma007/aws_ci_cd_project/85/workflows/28aab076-b640-45d7-92fd-cbb60265a8fe)
