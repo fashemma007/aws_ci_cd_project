@@ -456,20 +456,16 @@ jobs:
       - run:
           name: Get & Remove old stacks and files
           command: |
-            export OldWorkflowID=$(aws cloudformation \
-              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-              --no-paginate --output text)
-
-            echo OldWorkflowID:"${OldWorkflowID}"
-            echo CIRCLE_WORKFLOW_ID: "${CIRCLE_WORKFLOW_ID:0:7}"
-
+            echo "Getting the unique ID of all stacks..."
+            export VAR=$(echo $(aws cloudformation list-stacks --query "StackSummaries[*].StackName" --stack-status-filter CREATE_COMPLETE --no-paginate --output text) | awk  '{print $1}')
+            echo "Stacks available:"
+            echo ${VAR}
+            IFS="-" read -r UDAPEOPLE SIDE ID <<< "${VAR}"
+            
+            export OldWorkflowID=$(echo ${ID})
+            echo OldWorkflowID: "${OldWorkflowID}"
             CurrentWorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"
-
-            export STACKS=$
-            (aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
-            --stack-status-filter CREATE_COMPLETE --no-paginate --output text)
-
-            echo Stack names: "${STACKS[@]}"
+            echo CIRCLE_WORKFLOW_ID: "${CIRCLE_WORKFLOW_ID:0:7}"
 
             if [[ "$CurrentWorkflowID" != "$OldWorkflowID" ]]
             then
@@ -477,8 +473,37 @@ jobs:
               aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
             else
-              echo "$OldWorkflowID==$CurrentWorkflowID => nothing needs to be done..."
+              echo "👨🏾‍💻 No stacks to delete"
             fi
+
+  add-prometheus-node-exporter:
+    docker:
+      - image: python:3.10-alpine3.16
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["17:03:c5:7f:62:60:69:97:e0:50:ba:8e:69:e7:20:b5"]
+      - run:
+          name: Install deps
+          command: |
+            apk add --update aws-cli tar gzip ansible nodejs npm
+      - restore_cache:
+          keys: [backend-build]
+      - attach_workspace:
+          at: .
+      - run:
+          name: Setup Prometheus Node Exporter
+          command: |
+            cd .circleci/ansible
+            cat inventory.txt
+            ansible-playbook -i inventory.txt node-exporter.yml \
+            --key-file ~/.ssh/id_rsa_1703c57f62606997e050ba8e69e720b5
+      # Here's where you will add some code to rollback on failure
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+
 workflows:
   default:
     jobs:
@@ -509,5 +534,7 @@ workflows:
           requires: [deploy-backend, deploy-frontend]
       - cloudfront-update:
           requires: [smoke-test]
+      - add-prometheus-node-exporter:
+          requires: [[smoke-test]
       - cleanup:
           requires: [cloudfront-update]
