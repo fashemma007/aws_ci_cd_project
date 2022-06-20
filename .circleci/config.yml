@@ -449,7 +449,7 @@ jobs:
   cleanup:
     docker:
       # Docker image here
-      - image: python:3.7-alpine3.11
+      - image: circleci/node:13.8.0
     steps:
       # Checkout code from git
       - checkout
@@ -458,7 +458,8 @@ jobs:
       - run:
           name: Get & Remove old stacks and files
           command: |
-            echo "⇛ Install aws-cli"
+            echo "⇛ Install bash aws-cli"
+            apk update && apk add bash
             pip install awscli
             echo "⇛ Getting the unique ID of all stacks..."
             cd .circleci/ansible/
