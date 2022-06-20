@@ -456,8 +456,9 @@ jobs:
       - run:
           name: Get & Remove old stacks and files
           command: |
+            IFS="-" 
+            read -r UDAPEOPLE SIDE ID <<< $(echo $(aws cloudformation list-stacks --query "StackSummaries[*].StackName" --stack-status-filter CREATE_COMPLETE --no-paginate --output text) | awk  '{print $1}')
             echo "Getting the unique ID of all stacks..."
-            IFS="-" read -r UDAPEOPLE SIDE ID <<< $(echo $(aws cloudformation list-stacks --query "StackSummaries[*].StackName" --stack-status-filter CREATE_COMPLETE --no-paginate --output text) | awk  '{print $1}')
 
             export OldWorkflowID=$(echo ${ID})
             echo OldWorkflowID: "${OldWorkflowID}"
