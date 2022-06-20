@@ -461,7 +461,7 @@ jobs:
             echo "Stacks available:"
             echo ${VAR}
             IFS="-" read -r UDAPEOPLE SIDE ID <<< "${VAR}"
-            
+
             export OldWorkflowID=$(echo ${ID})
             echo OldWorkflowID: "${OldWorkflowID}"
             CurrentWorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"
@@ -535,6 +535,6 @@ workflows:
       - cloudfront-update:
           requires: [smoke-test]
       - add-prometheus-node-exporter:
-          requires: [[smoke-test]
+          requires: [smoke-test]
       - cleanup:
           requires: [cloudfront-update]
