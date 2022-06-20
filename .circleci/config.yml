@@ -462,6 +462,7 @@ jobs:
             pip install awscli
             echo "⇛ Getting the unique ID of all stacks..."
             cd .circleci/ansible/
+            chmod u+x test.sh
             export OldWorkflowID=$(./test.sh)
             echo OldWorkflowID: "${OldWorkflowID}"
             CurrentWorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"
