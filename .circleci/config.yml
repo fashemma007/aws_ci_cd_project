@@ -460,7 +460,7 @@ jobs:
             export VAR=$(echo $(aws cloudformation list-stacks --query "StackSummaries[*].StackName" --stack-status-filter CREATE_COMPLETE --no-paginate --output text) | awk  '{print $1}')
             echo "Stacks available:"
             echo ${VAR}
-            IFS=\"-\" read -r UDAPEOPLE SIDE ID <<< \"${VAR}\"
+            IFS="-" read -r UDAPEOPLE SIDE ID \\<<< "${VAR}"
 
             export OldWorkflowID=$(echo ${ID})
             echo OldWorkflowID: "${OldWorkflowID}"
