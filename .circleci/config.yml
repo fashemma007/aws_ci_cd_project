@@ -453,14 +453,13 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      - attach_workspace:
+        at: .
       - run:
           name: Get & Remove old stacks and files
           command: |
-            IFS="-" 
-            read -r UDAPEOPLE SIDE ID <<< $(echo $(aws cloudformation list-stacks --query "StackSummaries[*].StackName" --stack-status-filter CREATE_COMPLETE --no-paginate --output text) | awk  '{print $1}')
             echo "Getting the unique ID of all stacks..."
-
-            export OldWorkflowID=$(echo ${ID})
+            export OldWorkflowID=$(.circleci/ansible/test.sh)
             echo OldWorkflowID: "${OldWorkflowID}"
             CurrentWorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"
             echo CIRCLE_WORKFLOW_ID: "${CIRCLE_WORKFLOW_ID:0:7}"
