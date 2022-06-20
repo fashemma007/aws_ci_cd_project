@@ -449,7 +449,7 @@ jobs:
   cleanup:
     docker:
       # Docker image here
-      - image: amazon/aws-cli
+      - image: python:3.7-alpine3.11
     steps:
       # Checkout code from git
       - checkout
@@ -458,6 +458,8 @@ jobs:
       - run:
           name: Get & Remove old stacks and files
           command: |
+            echo "Install aws-cli"
+            pip install awscli
             echo "Getting the unique ID of all stacks..."
             export OldWorkflowID=$(.circleci/ansible/test.sh)
             echo OldWorkflowID: "${OldWorkflowID}"
