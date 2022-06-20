@@ -502,6 +502,19 @@ jobs:
             cat inventory.txt
             ansible-playbook -i inventory.txt node-exporter.yml \
             --key-file ~/.ssh/id_rsa_1703c57f62606997e050ba8e69e720b5
+      - run:
+          name: Alert Manager
+          command: |
+            sudo useradd --no-create-home node_exporter
+            wget https://github.com/prometheus/node_exporter/releases/download/v1.0.1/node_exporter-1.0.1.linux-amd64.tar.gz
+            tar xzf node_exporter-1.0.1.linux-amd64.tar.gz
+            sudo cp node_exporter-1.0.1.linux-amd64/node_exporter /usr/local/bin/node_exporter
+            rm -rf node_exporter-1.0.1.linux-amd64.tar.gz node_exporter-1.0.1.linux-amd64
+            sudo systemctl daemon-reload
+            sudo systemctl enable node-exporter
+            sudo systemctl start node-exporter
+            sudo systemctl status node-exporter
+
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
