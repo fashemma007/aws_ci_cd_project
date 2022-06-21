@@ -485,16 +485,17 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - restore_cache:
+          keys: [backend-build]
+      - attach_workspace:
+          at: .
       - add_ssh_keys:
           fingerprints: ["17:03:c5:7f:62:60:69:97:e0:50:ba:8e:69:e7:20:b5"]
       - run:
           name: Install deps
           command: |
-            sudo apt-get update && sudo apt-get install -yy awscli tar gzip ansible nodejs npm curl
-      - restore_cache:
-          keys: [backend-build]
-      - attach_workspace:
-          at: .
+            sudo apt-get update
+            sudo apt-get install -yy awscli tar gzip ansible nodejs curl
       - run:
           name: Setup Prometheus Node Exporter
           command: |
