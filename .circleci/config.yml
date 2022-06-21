@@ -482,20 +482,19 @@ jobs:
 
   add-prometheus-node-exporter:
     docker:
-      - image: circleci/node:13.8.0
+      - image: python:3.10-alpine3.16
     steps:
       - checkout
-      - restore_cache:
-          keys: [backend-build]
-      - attach_workspace:
-          at: .
       - add_ssh_keys:
           fingerprints: ["17:03:c5:7f:62:60:69:97:e0:50:ba:8e:69:e7:20:b5"]
       - run:
           name: Install deps
           command: |
-            sudo apt-get update
-            sudo apt-get install -yy awscli tar gzip ansible nodejs curl
+            apk add --update aws-cli tar gzip ansible nodejs npm
+      - restore_cache:
+          keys: [backend-build]
+      - attach_workspace:
+          at: .
       - run:
           name: Setup Prometheus Node Exporter
           command: |
@@ -503,19 +502,6 @@ jobs:
             cat inventory.txt
             ansible-playbook -i inventory.txt node-exporter.yml \
             --key-file ~/.ssh/id_rsa_1703c57f62606997e050ba8e69e720b5
-      - run:
-          name: Alert Manager
-          command: |
-            sudo useradd --no-create-home node_exporter
-            wget https://github.com/prometheus/node_exporter/releases/download/v1.0.1/node_exporter-1.0.1.linux-amd64.tar.gz
-            tar xzf node_exporter-1.0.1.linux-amd64.tar.gz
-            sudo cp node_exporter-1.0.1.linux-amd64/node_exporter /usr/local/bin/node_exporter
-            sudo rm -rf node_exporter-1.0.1.linux-amd64.tar.gz node_exporter-1.0.1.linux-amd64
-            sudo systemctl daemon-reload
-            sudo systemctl enable node-exporter
-            sudo systemctl start node-exporter
-            sudo systemctl status node-exporter
-
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
