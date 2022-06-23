@@ -10,7 +10,7 @@ Resources:
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: !Sub "${WorkflowID}"
+      GroupName: !Sub udapeople-${ID}
       GroupDescription: Allowport 22 (SSH) port 3030 (web-app) and 9100 (node exporter).
       SecurityGroupIngress:
         - IpProtocol: tcp
