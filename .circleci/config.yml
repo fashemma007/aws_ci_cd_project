@@ -46,7 +46,6 @@ commands:
           name: Revert migrations
           # Add when this will run
           command: |
-            printenv
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
             SUCCESS=$(curl --insecure https://kvdb.io/CMvom8KNgTj9k15pFZRfn5/migration_<< parameters.workflow_id >>)
             echo SUCCESS
@@ -68,6 +67,7 @@ jobs:
       - run:
           name: Build Udapeople Frontend
           command: |
+            printenv
             cd frontend
             npm install
             npm run build
