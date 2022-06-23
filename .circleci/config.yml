@@ -5,12 +5,6 @@ orbs:
 
 parameters:
   # parameters added
-  aws_access_key_id:
-    type: string
-    default: "${AWS_ACCESS_KEY_ID}"
-  aws_secret_key_id:
-    type: string
-    default: ${AWS_SECRET_ACCESS_KEY}
   workflow_id:
     type: string
     default: "${CIRCLE_WORKFLOW_ID}"
@@ -52,6 +46,7 @@ commands:
           name: Revert migrations
           # Add when this will run
           command: |
+            printenv
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
             SUCCESS=$(curl --insecure https://kvdb.io/CMvom8KNgTj9k15pFZRfn5/migration_<< parameters.workflow_id >>)
             echo SUCCESS
@@ -186,7 +181,6 @@ jobs:
       # Checkout code from git
       - checkout
       - run: yum install -y tar gzip
-        echo "Checking-${AWS_SECRET_ACCESS_KEY}"
 
       - run:
           name: Ensure the backend infrastructure exists & creates it if not.
