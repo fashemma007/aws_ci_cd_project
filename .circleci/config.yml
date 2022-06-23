@@ -180,6 +180,8 @@ jobs:
       # Checkout code from git
       - checkout
       - run: yum install -y tar gzip
+        echo ${AWS_ACCESS_KEY_ID}
+        echo ${AWS_SECRET_ACCESS_KEY}
       - run:
           name: Ensure the backend infrastructure exists & creates it if not.
           command: |
