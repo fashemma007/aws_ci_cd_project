@@ -222,6 +222,6 @@ The UdaPeople finance department likes it when your AWS bills are more or less t
 
 #### Other Considerations
 
-- Make sure you only run deployment-related jobs on commits to the `master` branch. Provide screenshot of a build triggered by a non-master commit. It should only run the jobs prior to deployment. **[SCREENSHOT10]**
+- Make sure you only run deployment-related jobs on commits to the `main` branch. Provide screenshot of a build triggered by a non-master commit. It should only run the jobs prior to deployment. **[SCREENSHOT10]**
 
 ![Deploy jobs only run on master](screenshots/SCREENSHOT10.png)
